@@ -16,32 +16,88 @@ const getChartData = async (filename: string) => {
 };
 
 export const SlopeChart = (props: HighchartsReact.Props) => {
-  const { filename, line, group, visible } = props;
+  const { filename, line, group, visible, unit } = props;
 
   const data = getChartData(filename);
 
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const [options, setOptions] = useState<Highcharts.Options>({
-    chart: {},
     title: {
       text: "",
     },
+    chart: {},
     credits: {
       enabled: false,
+    },
+    legend: {
+      itemWidth: 400,
+    },
+    plotOptions: {
+      line: {
+        lineWidth: 2,
+        shadow: false,
+        marker: {
+          radius: 2,
+        },
+        dataLabels: {
+          enabled: true,
+          allowOverlap: true,
+          align: "center",
+          verticalAlign: "bottom",
+          backgroundColor: "auto",
+          style: {
+            color: "white",
+            textOutline: "none",
+            textOverflow: "ellipsis",
+          },
+          x: 0,
+          y: 10,
+          formatter: function () {
+            return this.series.name + " " + this.y + unit;
+          },
+        },
+      },
+    },
+    tooltip: {
+      shared: true,
+      valueSuffix: unit,
+    },
+    xAxis: {
+      categories: ["listopad<br>2021", "květen<br>2023"],
+      lineColor: "#999",
+      title: {
+        text: "",
+      },
+      labels: {
+        style: {
+          fontWeight: "bold",
+        },
+      },
     },
     yAxis: {
       title: {
         text: "",
       },
-      min: 0,
+      gridLineWidth: 0,
+      labels: {
+        enabled: false,
+      },
     },
   });
 
   useEffect(() => {
     data.then((data) => {
+      const groupsData = data.groups.find(
+        (groupData: any) => groupData.title === group
+      );
+
       setOptions((prevOptions) => {
         return {
           ...prevOptions,
+          chart: {
+            ...prevOptions.chart,
+            height: groupsData.data.length * 13.5 + 450,
+          },
           yAxis: {
             ...prevOptions.yAxis,
             max: data.yMax,
@@ -50,24 +106,41 @@ export const SlopeChart = (props: HighchartsReact.Props) => {
             {
               name: "Všichni",
               type: "line",
-              data: data.total.lines[line].filter(
-                (_point: number, index: number) =>
-                  index === 0 || index === data.total.lines[line].length - 1
-              ),
-            },
-            ...data.groups
-              .find((groupData: any) => groupData.title === group)
-              .data.map((groupData: any) => {
-                return {
-                  name: groupData.title,
-                  type: "line",
-                  data: groupData.lines[line].filter(
+              data: line.reduce(
+                (acc: number[], curr: number) => {
+                  const values = data.total.lines[curr].filter(
                     (_point: number, index: number) =>
-                      index === 0 || index === groupData.lines[line].length - 1
-                  ),
-                  visible: visible.includes(groupData.title),
-                };
-              }),
+                      index === 0 || index === data.total.lines[curr].length - 1
+                  );
+                  return [acc[0] + values[0], acc[1] + values[1]];
+                },
+                [0, 0]
+              ),
+              marker: {
+                symbol: "circle",
+              },
+            },
+            ...groupsData.data.map((groupData: any) => {
+              return {
+                name: groupData.title,
+                type: "line",
+                data: line.reduce(
+                  (acc: number[], curr: number) => {
+                    const values = groupData.lines[curr].filter(
+                      (_point: number, index: number) =>
+                        index === 0 ||
+                        index === groupData.lines[curr].length - 1
+                    );
+                    return [acc[0] + values[0], acc[1] + values[1]];
+                  },
+                  [0, 0]
+                ),
+                visible: visible.includes(groupData.title),
+                marker: {
+                  symbol: "square",
+                },
+              };
+            }),
           ],
         };
       });
