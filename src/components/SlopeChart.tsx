@@ -16,7 +16,7 @@ const getChartData = async (filename: string) => {
 };
 
 export const SlopeChart = (props: HighchartsReact.Props) => {
-  const { filename, group, visible } = props;
+  const { filename, line, group, visible } = props;
 
   const data = getChartData(filename);
 
@@ -29,6 +29,12 @@ export const SlopeChart = (props: HighchartsReact.Props) => {
     credits: {
       enabled: false,
     },
+    yAxis: {
+      title: {
+        text: "",
+      },
+      min: 0,
+    },
   });
 
   useEffect(() => {
@@ -36,13 +42,17 @@ export const SlopeChart = (props: HighchartsReact.Props) => {
       setOptions((prevOptions) => {
         return {
           ...prevOptions,
+          yAxis: {
+            ...prevOptions.yAxis,
+            max: data.yMax,
+          },
           series: [
             {
-              name: "Celkem",
+              name: "Všichni",
               type: "line",
-              data: data.total.lines[0].filter(
+              data: data.total.lines[line].filter(
                 (_point: number, index: number) =>
-                  index === 0 || index === data.total.lines[0].length - 1
+                  index === 0 || index === data.total.lines[line].length - 1
               ),
             },
             ...data.groups
@@ -51,17 +61,18 @@ export const SlopeChart = (props: HighchartsReact.Props) => {
                 return {
                   name: groupData.title,
                   type: "line",
-                  data: groupData.lines[0].filter(
+                  data: groupData.lines[line].filter(
                     (_point: number, index: number) =>
-                      index === 0 || index === groupData.lines[0].length - 1
+                      index === 0 || index === groupData.lines[line].length - 1
                   ),
+                  visible: visible.includes(groupData.title),
                 };
               }),
           ],
         };
       });
     });
-  }, [data]);
+  }, []);
 
   return (
     <HighchartsReact

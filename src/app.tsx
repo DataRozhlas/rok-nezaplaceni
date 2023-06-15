@@ -13,6 +13,7 @@ const charts = [
   {
     title: "Kolik procent příjmů dávají za bydlení",
     filename: "vydaje-procenta",
+    line: 0,
     groups: [
       {
         name: "Region",
@@ -31,27 +32,32 @@ export const App = () => {
     <Container maxW={620}>
       {charts.map((chart) => {
         return (
-          <Tabs key={chart.filename} variant="soft-rounded">
-            <TabList>
-              {chart.groups.map((group) => {
-                return <Tab key={group.name}>{group.name}</Tab>;
-              })}
-            </TabList>
-            <TabPanels>
-              {chart.groups.map((group) => {
-                return (
-                  <TabPanel key={group.name}>
-                    <Heading>{chart.title}</Heading>
-                    <SlopeChart
-                      filename={chart.filename}
-                      group={group.name}
-                      visible={group.visible}
-                    ></SlopeChart>
-                  </TabPanel>
-                );
-              })}
-            </TabPanels>
-          </Tabs>
+          <>
+            <Heading fontSize={"3xl"} pb={3}>
+              {chart.title}
+            </Heading>
+            <Tabs key={chart.filename} variant="soft-rounded">
+              <TabList>
+                {chart.groups.map((group) => {
+                  return <Tab key={group.name}>{group.name}</Tab>;
+                })}
+              </TabList>
+              <TabPanels>
+                {chart.groups.map((group) => {
+                  return (
+                    <TabPanel key={group.name}>
+                      <SlopeChart
+                        filename={chart.filename}
+                        line={chart.line}
+                        group={group.name}
+                        visible={group.visible}
+                      ></SlopeChart>
+                    </TabPanel>
+                  );
+                })}
+              </TabPanels>
+            </Tabs>
+          </>
         );
       })}
       ;
