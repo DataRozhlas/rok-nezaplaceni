@@ -34,6 +34,7 @@ export const SlopeChart = (props: HighchartsReact.Props) => {
     },
     plotOptions: {
       line: {
+        animation: false,
         lineWidth: 2,
         shadow: false,
         marker: {
