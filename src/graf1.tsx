@@ -35,51 +35,6 @@ const charts = [
       },
     ],
   },
-  //   {
-  //     title: "Kolika domácnostem po zaplacení všech výdajů nic nezbývá",
-  //     filename: "uspory-procenta",
-  //     line: [2, 3],
-  //     unit: " %",
-  //     groups: [
-  //       {
-  //         name: "Region",
-  //         visible: ["Severozápad (Karlovarský a Ústecký kraj)"],
-  //       },
-
-  //       {
-  //         name: "Typ domácnosti – děti a příjem",
-  //         visible: ["S dětmi – příjem pod medián"],
-  //       },
-  //       {
-  //         name: "Příjem domácnosti",
-  //         visible: ["Pod hranicí chudoby (< 60 % mediánu)"],
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     title: "Kolik domácnostem zbývá po zaplacení všech výdajů",
-  //     filename: "uspory-castky",
-  //     line: [0],
-  //     unit: " Kč",
-  //     groups: [
-  //       {
-  //         name: "Dospělí v domácnosti",
-  //         visible: ["Jen muž"],
-  //       },
-  //       {
-  //         name: "Typ domácnosti – děti a příjem",
-  //         visible: ["S dětmi – příjem pod medián"],
-  //       },
-  //       {
-  //         name: "Region",
-  //         visible: ["Střední Morava (Olomoucký a Zlínský kraj)", "Praha"],
-  //       },
-  //       {
-  //         name: "Majitelé a nájemníci",
-  //         visible: ["Vlastníci a družstevníci", "Nájemníci a podnájemníci"],
-  //       },
-  //     ],
-  //   },
 ];
 
 const App = () => {
@@ -91,21 +46,26 @@ const App = () => {
   }, [activeTab]);
 
   return (
-    <Container maxW={620} ref={containerRef}>
+    <Container maxW={620} ref={containerRef} px={0}>
       {charts.map((chart) => {
         return (
-          <Container pb={10}>
-            <Heading fontSize={"3xl"} pb={3}>
+          <Container px={0}>
+            <Heading fontSize={"2xl"} pb={3}>
               {chart.title}
             </Heading>
             <Tabs
               key={chart.filename}
               variant="enclosed"
+              size={"sm"}
               onChange={(index) => setActiveTab(index)}
             >
               <TabList>
                 {chart.groups.map((group) => {
-                  return <Tab key={group.name}>{group.name}</Tab>;
+                  return (
+                    <Tab key={group.name} fontSize={"sm"}>
+                      {group.name}
+                    </Tab>
+                  );
                 })}
               </TabList>
               <TabPanels>

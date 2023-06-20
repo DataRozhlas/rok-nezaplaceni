@@ -91,21 +91,26 @@ const App = () => {
   }, [activeTab]);
 
   return (
-    <Container maxW={620} ref={containerRef}>
+    <Container maxW={620} px={0} ref={containerRef}>
       {charts.map((chart) => {
         return (
-          <Container pb={10}>
-            <Heading fontSize={"3xl"} pb={3}>
+          <Container px={0}>
+            <Heading fontSize={"2xl"} pb={3}>
               {chart.title}
             </Heading>
             <Tabs
               key={chart.filename}
               variant="enclosed"
+              size={"sm"}
               onChange={(index) => setActiveTab(index)}
             >
               <TabList>
                 {chart.groups.map((group) => {
-                  return <Tab key={group.name}>{group.name}</Tab>;
+                  return (
+                    <Tab key={group.name} fontSize={"sm"}>
+                      {group.name}
+                    </Tab>
+                  );
                 })}
               </TabList>
               <TabPanels>

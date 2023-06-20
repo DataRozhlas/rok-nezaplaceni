@@ -25,12 +25,8 @@ export const SlopeChart = (props: HighchartsReact.Props) => {
     title: {
       text: "",
     },
-    chart: {},
     credits: {
       enabled: false,
-    },
-    legend: {
-      itemWidth: 400,
     },
     plotOptions: {
       line: {
