@@ -83,7 +83,8 @@ const charts = [
 ];
 
 const App = () => {
-  const { containerRef, postHeightMessage } = usePostMessageWithHeight("graf1");
+  const { containerRef, postHeightMessage } =
+    usePostMessageWithHeight("rok-nezap-graf3");
   const [activeTab, setActiveTab] = useState(0);
   useEffect(() => {
     postHeightMessage();
